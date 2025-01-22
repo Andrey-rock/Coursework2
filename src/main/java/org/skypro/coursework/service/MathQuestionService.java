@@ -1,8 +1,7 @@
 package org.skypro.coursework.service;
 
+import org.skypro.coursework.exception.MathCrudException;
 import org.skypro.coursework.model.Question;
-import org.skypro.coursework.repository.QuestionRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,36 +10,48 @@ import java.util.*;
 public class MathQuestionService implements QuestionService {
 
     private final Random random;
-    private final QuestionRepository questionRepository;
 
-    public MathQuestionService(Random random, @Qualifier("mathQuestionRepository") QuestionRepository questionRepository) {
+    public MathQuestionService(Random random) {
         this.random = random;
-        this.questionRepository = questionRepository;
     }
 
 
     @Override
     public Question add(String question, String answer) {
-        return questionRepository.add(question, answer);
+        throw new MathCrudException();
     }
 
     @Override
     public Question add(Question question) {
-        return questionRepository.add(question);
+        throw new MathCrudException();
     }
 
     @Override
     public Question remove(Question question) {
-        return questionRepository.remove(question);
+        throw new MathCrudException();
     }
 
     @Override
     public Collection<Question> getAll() {
-        return questionRepository.getAll();
+        throw new MathCrudException();
     }
 
     @Override
     public Question getRandomQuestion() {
-        return getQuestion(questionRepository.getAll(), random);
+
+        Collection<Question> questionSet = initialMathQuestionSet();
+        return getQuestion(questionSet, random);
+    }
+
+    public Set<Question> initialMathQuestionSet() {
+        Question question1 = new Question("Дважды два",
+                "четыре");
+        Question question2 = new Question("Как называется график функции 1/x ?",
+                "гипербола");
+        Question question3 = new Question("Что такое логарифм ?",
+                "Логарифм числа  a по основанию  b (где b больше 0, a больше 0, a не равно 0) — это " +
+                        "показатель степени, в которую нужно возвести число a, чтобы получилось число b.");
+
+        return new HashSet<>(Arrays.asList(question1, question2, question3));
     }
 }

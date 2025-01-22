@@ -1,5 +1,6 @@
 package org.skypro.coursework.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.skypro.coursework.exception.NoQuestionsInServiceException;
 import org.skypro.coursework.model.Question;
 import java.util.Collection;
@@ -18,7 +19,7 @@ public interface QuestionService {
     Question getRandomQuestion();
 
 
-    default Question getQuestion(Collection<Question> questions, Random random) {
+    default Question getQuestion(@NotNull Collection<Question> questions, Random random) {
         if (questions.isEmpty()) {
             throw new NoQuestionsInServiceException();
         }
