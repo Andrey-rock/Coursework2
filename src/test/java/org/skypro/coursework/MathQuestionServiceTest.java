@@ -8,9 +8,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.coursework.exception.QuestionNotFoundException;
 import org.skypro.coursework.model.Question;
-import org.skypro.coursework.repository.JavaQuestionRepository;
+import org.skypro.coursework.repository.MathQuestionRepository;
 import org.skypro.coursework.repository.QuestionRepository;
-import org.skypro.coursework.service.JavaQuestionService;
+import org.skypro.coursework.service.MathQuestionService;
 
 
 import java.util.*;
@@ -18,16 +18,16 @@ import java.util.*;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class JavaQuestionServiceTest {
+public class MathQuestionServiceTest {
 
     private Random random;
-    private JavaQuestionService service;
+    private MathQuestionService service;
 
     @BeforeEach
     public void setUp() {
         random = mock(Random.class);
-        QuestionRepository javaQuestionRepository = new JavaQuestionRepository();
-        service = new JavaQuestionService(random, javaQuestionRepository);
+        QuestionRepository mathQuestionRepository = new MathQuestionRepository();
+        service = new MathQuestionService(random, mathQuestionRepository);
     }
 
     //Тест корректрого добавления вопроса. При добавлении нового вопроса
@@ -84,7 +84,6 @@ public class JavaQuestionServiceTest {
             Question question3 = iterator.next();
             Assertions.assertEquals(question3, service.getRandomQuestion());
         }
-
         //Работоспособность метода getAll() уже проверяется в имеющихся тестах и отдельной проверки не требуется.
     }
 }
