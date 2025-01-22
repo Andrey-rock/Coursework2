@@ -4,11 +4,13 @@ import org.skypro.coursework.model.Question;
 import org.skypro.coursework.service.ExaminerServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
 @RestController
+@RequestMapping("/exam/get")
 public class ExamController {
 
     private final ExaminerServiceImpl examinerService;
@@ -17,8 +19,13 @@ public class ExamController {
         this.examinerService = examinerService;
     }
 
-    @GetMapping("/exam/get/{amount}")
-    public Collection<Question> getQuestions(@PathVariable int amount) {
-        return examinerService.getQuestions(amount);
+    @GetMapping("/java/{amount}")
+    public Collection<Question> getJavaQuestions(@PathVariable int amount) {
+        return examinerService.getJavaQuestions(amount);
+    }
+
+    @GetMapping("/math/{amount}")
+    public Collection<Question> getMathQuestions(@PathVariable int amount) {
+        return examinerService.getMathQuestions(amount);
     }
 }
