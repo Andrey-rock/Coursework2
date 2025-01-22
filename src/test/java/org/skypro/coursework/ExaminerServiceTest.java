@@ -6,14 +6,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.coursework.exception.ExceededCountQuestionsException;
 import org.skypro.coursework.repository.JavaQuestionRepository;
-import org.skypro.coursework.repository.MathQuestionRepository;
 import org.skypro.coursework.repository.QuestionRepository;
 import org.skypro.coursework.service.ExaminerServiceImpl;
 import org.skypro.coursework.service.JavaQuestionService;
 import org.skypro.coursework.service.MathQuestionService;
+import org.skypro.coursework.service.QuestionService;
 
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ExaminerServiceTest {
@@ -22,9 +21,6 @@ public class ExaminerServiceTest {
         javaQuestionService.add("test1", "test1");
         javaQuestionService.add("test2", "test2");
         javaQuestionService.add("test3", "test3");
-        mathQuestionService.add("test1", "test1");
-        mathQuestionService.add("test2", "test2");
-        mathQuestionService.add("test3", "test3");
     }
 
     //В данном случае я решил проверить всю функциональность с реальными классами,
@@ -33,10 +29,11 @@ public class ExaminerServiceTest {
 
     private final Random random = new Random();
     private final QuestionRepository javaQuestionRepository = new JavaQuestionRepository();
-    private final QuestionRepository mathQuestionRepository = new MathQuestionRepository();
+
     private final JavaQuestionService javaQuestionService = new JavaQuestionService(random, javaQuestionRepository);
-    private final MathQuestionService mathQuestionService = new MathQuestionService(random, mathQuestionRepository);
-    private final ExaminerServiceImpl examinerService = new ExaminerServiceImpl(javaQuestionService, mathQuestionService);
+    private final MathQuestionService mathQuestionService = new MathQuestionService(random);
+    private final List<QuestionService> questionServiceList = new ArrayList<>(Arrays.asList(javaQuestionService, mathQuestionService));
+    private final ExaminerServiceImpl examinerService = new ExaminerServiceImpl(questionServiceList);
 
     //Если пользователь запрашивает 0 вопросов, то получает пустую коллекцию
     //Возможно с точки зрения теориии тестирования тест не очень полезен, т.к. проверяет слишком простую функциональность,

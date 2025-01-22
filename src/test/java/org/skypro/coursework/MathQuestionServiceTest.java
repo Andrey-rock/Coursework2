@@ -1,84 +1,53 @@
 package org.skypro.coursework;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.skypro.coursework.exception.QuestionNotFoundException;
+import org.skypro.coursework.exception.MathCrudException;
 import org.skypro.coursework.model.Question;
-import org.skypro.coursework.repository.MathQuestionRepository;
-import org.skypro.coursework.repository.QuestionRepository;
 import org.skypro.coursework.service.MathQuestionService;
 
 
 import java.util.*;
 
-import static org.mockito.Mockito.mock;
-
 @ExtendWith(MockitoExtension.class)
 public class MathQuestionServiceTest {
 
+    @Mock
     private Random random;
+
+    @InjectMocks
     private MathQuestionService service;
 
-    @BeforeEach
-    public void setUp() {
-        random = mock(Random.class);
-        QuestionRepository mathQuestionRepository = new MathQuestionRepository();
-        service = new MathQuestionService(random, mathQuestionRepository);
-    }
 
-    //Тест корректрого добавления вопроса. При добавлении нового вопроса
-    // а) сервис возвращает объект Question с вопросом;
-    // б) вопрос добавляется в хранилище.
+    //Тест добавления вопроса.
     @Test
     void addQuestion() {
-        Question question = new Question("Test", "Test");
-        Set<Question> questions = new HashSet<>();
-        questions.add(question);
 
-        Assertions.assertEquals(question, service.add("Test", "Test"));
-        Assertions.assertEquals(questions, service.getAll());
+        Assertions.assertThrows(MathCrudException.class, () -> service.add("Test", "Test"));
     }
 
-    //Тест корректного удаления существующего вопроса.
-    // а) сервис возвращает объект Question с вопросом;
-    // б) вопрос удаляется из хранилища.
+    //Тест удаления вопроса.
+
     @Test
     void removeExistingQuestion() {
         Question question = new Question("Test", "Test");
-        service.add(question);
 
-        Assertions.assertEquals(question, service.remove(question));
-        Assertions.assertEquals(Collections.emptySet(), service.getAll());
-    }
-
-    //Тест удаления несуществующего вопроса.
-    //При попытке удалить несуществующий вопрос и при отсутствии вопросов выбрасывается QuestionNotFoundException.
-    @Test
-    void removeNonExistingQuestion() {
-        Question question1 = new Question("Test", "Test");
-        Question question2 = new Question("Test1", "Test1");
-        service.add(question1);
-
-        Assertions.assertThrows(QuestionNotFoundException.class, () -> service.remove(question2));
+        Assertions.assertThrows(MathCrudException.class, () -> service.remove(question));
     }
 
     //Тест получения рандомного вопроса
     @Test
     void getRandomQuestion() {
-        Question question = new Question("Test", "Test");
-        Question question1 = new Question("Test1", "Test1");
-        Question question2 = new Question("Test2", "Test2");
-        service.add(question);
-        service.add(question1);
-        service.add(question2);
 
         Mockito.when(random.nextInt(3)).thenReturn(0, 1, 2);
+        Set<Question> questions = service.initialMathQuestionSet();
 
-        Iterator<Question> iterator = service.getAll().iterator();
+        Iterator<Question> iterator = questions.iterator();
 
         for (int i = 0; i < 3; i++) {
             Question question3 = iterator.next();
