@@ -2,6 +2,7 @@ package org.skypro.coursework.controller;
 
 import org.jetbrains.annotations.NotNull;
 import org.skypro.coursework.exception.ExceededCountQuestionsException;
+import org.skypro.coursework.exception.MathCrudException;
 import org.skypro.coursework.exception.NoQuestionsInServiceException;
 import org.skypro.coursework.exception.QuestionNotFoundException;
 import org.skypro.coursework.model.ExamError;
@@ -21,20 +22,26 @@ public class ExamControllerAdvice {
     }
 
     @ExceptionHandler(QuestionNotFoundException.class)
-    public ResponseEntity<ExamError> handleIllegalArgumentException(@NotNull QuestionNotFoundException e) {
+    public ResponseEntity<ExamError> handleQuestionNotFoundException(@NotNull QuestionNotFoundException e) {
         ExamError examError = new ExamError("400", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(examError);
     }
 
     @ExceptionHandler(NoQuestionsInServiceException.class)
-    public ResponseEntity<ExamError> handleIllegalArgumentException(@NotNull NoQuestionsInServiceException e) {
+    public ResponseEntity<ExamError> handleNoQuestionsInServiceException(@NotNull NoQuestionsInServiceException e) {
         ExamError examError = new ExamError("404", e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(examError);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ExamError> handleIllegalArgumentException(@NotNull MethodArgumentTypeMismatchException e) {
+    public ResponseEntity<ExamError> handleMethodArgumentTypeMismatchException(@NotNull MethodArgumentTypeMismatchException e) {
         ExamError examError = new ExamError("400", "Неверный запрос");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(examError);
+    }
+
+    @ExceptionHandler(MathCrudException.class)
+    public ResponseEntity<ExamError> handleMathCrudException(@NotNull MathCrudException e) {
+        ExamError examError = new ExamError("405", e.getMessage());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(examError);
     }
 }
